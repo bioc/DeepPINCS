@@ -8,77 +8,7 @@ gcn_in_out <- function(max_atoms, feature_dim,
         stop("the number of layers for fc in gcn_in_out should be the same")
     }
     
-    if (!exists("Layer")) {
-        # from keras library
-        Layer <- function(classname, initialize, build = NULL, call = NULL, 
-            compute_output_shape = NULL, ...,  
-            inherit = tensorflow::tf$keras$layers$Layer) {
-            defs <- list(
-                initialize = initialize,
-                build = build,
-                call = call,
-                compute_output_shape = compute_output_shape
-            )
-            defs <- Filter(Negate(is.null), defs)
-            defs <- append(defs, list(...))
-            
-            
-            # allow using the initialize method
-            if ("initialize" %in% names(defs)) {
-                if (!is.null(defs$`__init__`))
-                    stop("You should not specify both __init__ and initialize methods.", call.=FALSE)
-                
-                defs[["__init__"]] <- defs$initialize
-            }
-            
-            # automatically add the `self` argument
-            defs <- lapply(defs, function(x) {
-                
-                if (inherits(x, "function")) {
-                    formals(x) <- append(
-                        pairlist(self = NULL),
-                        formals(x)
-                    )
-                }
-                
-                x
-            })
-            
-            # makes the function return NULL. `__init__` in python must always return None
-            defs$`__init__` <- wrap_return_null(defs$`__init__`)
-            
-            # allow inheriting from custom created layers
-            if (!is.null(attr(inherit, "layer")))
-                inherit <- attr(inherit, "layer")
-            
-            layer <- reticulate::PyClass(
-                classname = classname,
-                defs = defs,
-                inherit = inherit
-            )
-            
-            # build the function to be used
-            f <- function() {
-                .args <- as.list(match.call())[-c(1)]
-                .args <- .args[names(.args) != "object"]
-                create_layer(layer, object, .args)
-            }
-            formals(f) <- append(
-                list(object = quote(expr=)),
-                formals(initialize)
-            )
-            attr(f, "layer") <- layer
-            f
-        }
-        
-        # makes the function return NULL. `__init__` in python must always return None.
-        wrap_return_null <- function(f) {
-            body(f)[[length(body(f)) + 1]] <- substitute(return(NULL))
-            f
-        }
-    }
-    
-    layer_multi_linear <- Layer(
+    layer_multi_linear <- keras::Layer(
         classname <- "MultiLinear", 
         initialize <- function(units, ...) {
             super()$`__init__`(...)
@@ -90,12 +20,6 @@ gcn_in_out <- function(max_atoms, feature_dim,
         },
         call <- function(inputs, ...) {
             keras::k_dot(inputs, self$kernel) + self$bias
-        },
-        get_config <- function() {
-            list(
-                units <- self$units,
-                name <- self$name
-            )
         }
     )
     
