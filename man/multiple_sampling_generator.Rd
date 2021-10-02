@@ -32,7 +32,7 @@ whether to shuffle the data or not (default: TRUE)
 
 
 \value{
-generator for "keras::fit_generator" or "keras::predict_genertor"
+generator for "keras::fit" or "keras::predict"
 }
 
 

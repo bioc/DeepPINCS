@@ -99,10 +99,12 @@ keras::layer_activation, keras::bidirectional, keras::layer_conv_1d, keras::laye
 }
 
 \examples{
-gcn_in_out(max_atoms = 50,
-    feature_dim = 50,
-    gcn_units = c(128, 64),
-    gcn_activation = c("relu", "relu"),
-    fc_units = c(10),
-    fc_activation = c("relu"))
+if (keras::is_keras_available() & reticulate::py_available()) {
+    gcn_in_out(max_atoms = 50,
+        feature_dim = 50,
+        gcn_units = c(128, 64),
+        gcn_activation = c("relu", "relu"),
+        fc_units = c(10),
+        fc_activation = c("relu"))
+}
 }
