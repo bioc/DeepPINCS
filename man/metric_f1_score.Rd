@@ -24,7 +24,7 @@ Mishra, A., Suseendran, G., & Phung, T. N. (Eds.). (2020). Soft Computing Applic
 }
 
 \examples{
-if (keras::is_keras_available() & reticulate::py_available()) {
+if (keras::is_keras_available() & reticulate::py_available() & reticulate::py_module_available("rpytools")) {
     compound_length_seq <- 50
     compound_embedding_dim <- 16
     protein_embedding_dim <- 16

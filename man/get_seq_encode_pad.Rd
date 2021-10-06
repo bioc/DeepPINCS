@@ -55,7 +55,7 @@ stringdist::qgrams, tokenizers::tokenize_ngrams
 }
 
 \examples{
-if (keras::is_keras_available() & reticulate::py_available()) {
+if (keras::is_keras_available() & reticulate::py_available() & reticulate::py_module_available("rpytools")) {
     get_seq_encode_pad(example_cpi[1, 2], 10)
 }
 }

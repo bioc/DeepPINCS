@@ -225,7 +225,7 @@ keras::compile, keras::fit, keras::fit_generator, keras::layer_dense, keras::ker
 
 
 \examples{
-if (keras::is_keras_available() & reticulate::py_available()) {
+if (keras::is_keras_available() & reticulate::py_available() & reticulate::py_module_available("rpytools")) {
     compound_max_atoms <- 50
     protein_embedding_dim <- 16
     protein_length_seq <- 100
