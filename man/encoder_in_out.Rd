@@ -99,7 +99,7 @@ keras::layer_activation, keras::bidirectional, keras::layer_conv_1d, keras::laye
 }
 
 \examples{
-if (keras::is_keras_available() & reticulate::py_available() & reticulate::py_module_available("rpytools")) {
+if (keras::is_keras_available() & reticulate::py_available()) {
     gcn_in_out(max_atoms = 50,
         feature_dim = 50,
         gcn_units = c(128, 64),
