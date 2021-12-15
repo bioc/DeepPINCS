@@ -22,7 +22,7 @@ Kose, U., & Alzubi, J. (2020). Deep learning for cancer diagnosis. Springer.
 }
 
 \examples{
-if (keras::is_keras_available() & reticulate::py_available() & reticulate::py_module_available("rpytools")) {
+if (keras::is_keras_available() & reticulate::py_available()) {
     compound_length_seq <- 50
     compound_embedding_dim <- 16
     protein_embedding_dim <- 16
