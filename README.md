@@ -10,7 +10,7 @@ The identification of novel compound-protein interaction (CPI) is important in d
 
 ## Installation
 
-Python is required. Furthermore, tensorflow and kears should be installed and they should be connected to R (https://tensorflow.rstudio.com, https://keras.rstudio.com).
+Python (3.9.9 is recommended) is required. Furthermore, tensorflow (2.8.0 is recommended) and kears (2.8.0 is recommended) should be installed and they should be connected to R (https://tensorflow.rstudio.com, https://keras.rstudio.com).
 
 To install the development version from GitHub:
 ``` 
