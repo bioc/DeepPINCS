@@ -21,10 +21,10 @@ gcn_in_out <- function(max_atoms, feature_dim,
         call <- function(inputs, ...) {
             keras::k_dot(inputs, self$kernel) + self$bias
         },
-        get_config <- function() {
+        get_config = function() {
             list(
-                units <- self$units,
-                name <- self$name
+                units = self$units,
+                name = self$name
             )
         }
     )
