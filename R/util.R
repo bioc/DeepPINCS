@@ -28,6 +28,10 @@ metric_f1_score <- function(y_true, y_pred) {
 
 
 get_canonical_smiles <- function(smiles) {
+    if (!require(rcdk)) {
+        install.packages("https://cran.r-project.org/src/contrib/Archive/rcdk/rcdk_3.8.0.tar.gz",
+                         repos = NULL, type = "source")
+    }
     m <- rcdk::parse.smiles(smiles)
     canonical_smiles <- lapply(m, function(x) 
         rcdk::get.smiles(x, flavor = rcdk::smiles.flavors(c("Canonical"))))
@@ -37,6 +41,10 @@ get_canonical_smiles <- function(smiles) {
 
 
 get_fingerprint <- function(smiles, ...) {
+    if (!require(rcdk)) {
+        install.packages("https://cran.r-project.org/src/contrib/Archive/rcdk/rcdk_3.8.0.tar.gz",
+                         repos = NULL, type = "source")
+    }
     m <- rcdk::parse.smiles(smiles)
     fpm <- lapply(m, function(x) rcdk::get.fingerprint(x, ...))
     for (i in seq_len(length(fpm))) {
@@ -54,6 +62,10 @@ get_graph_structure_node_feature <- function(
         "C", "N", "O", "S", "F", "Si", "P", "Cl",
         "Br", "Mg", "Na", "Ca", "Fe", "Al", "I",
         "B", "K", "Se", "Zn", "H", "Cu", "Mn")) {
+    if (!require(rcdk)) {
+        install.packages("https://cran.r-project.org/src/contrib/Archive/rcdk/rcdk_3.8.0.tar.gz",
+                         repos = NULL, type = "source")
+    }
     A <- list()
     X <- list()
     m <- rcdk::parse.smiles(smiles)
