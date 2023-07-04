@@ -32,9 +32,9 @@ get_canonical_smiles <- function(smiles) {
         install.packages("https://cran.r-project.org/src/contrib/Archive/rcdk/rcdk_3.8.0.tar.gz",
                          repos = NULL, type = "source")
     }
-    m <- rcdk::parse.smiles(smiles)
+    m <- parse.smiles(smiles) # from rcdk::parse.smiles
     canonical_smiles <- lapply(m, function(x) 
-        rcdk::get.smiles(x, flavor = rcdk::smiles.flavors(c("Canonical"))))
+        get.smiles(x, flavor = smiles.flavors(c("Canonical")))) # from rcdk::get.smiles and rcdk::smiles.flavors
     as.vector(unlist(canonical_smiles))
 }
 
@@ -45,8 +45,8 @@ get_fingerprint <- function(smiles, ...) {
         install.packages("https://cran.r-project.org/src/contrib/Archive/rcdk/rcdk_3.8.0.tar.gz",
                          repos = NULL, type = "source")
     }
-    m <- rcdk::parse.smiles(smiles)
-    fpm <- lapply(m, function(x) rcdk::get.fingerprint(x, ...))
+    m <- parse.smiles(smiles) # from rcdk::parse.smiles
+    fpm <- lapply(m, function(x) get.fingerprint(x, ...)) # from rcdk::get.fingerprint
     for (i in seq_len(length(fpm))) {
         if (i == 1) fp <- matrix(0, length(m), fpm[[i]]@nbit)
         fp[i, fpm[[i]]@bits] <- 1
@@ -68,21 +68,21 @@ get_graph_structure_node_feature <- function(
     }
     A <- list()
     X <- list()
-    m <- rcdk::parse.smiles(smiles)
+    m <- parse.smiles(smiles) # from rcdk::parse.smiles
     
     for (i in seq_len(length(m))) {
-        adj <- rcdk::get.adjacency.matrix(m[[i]])
+        adj <- get.adjacency.matrix(m[[i]]) # from rcdk::get.adjacency.matrix
         a <- adj + diag(1, dim(adj))
         degree <- rowSums(adj)
         A[[i]] <- diag((degree+1)^(-1/2)) %*% a %*% diag((degree+1)^(-1/2))
         
-        atoms <- rcdk::get.atoms(m[[i]])
+        atoms <- get.atoms(m[[i]]) # from rcdk::get.atoms
         num_atoms <- length(degree)
         atomic_symbol <- matrix(0, num_atoms, length(element_list))
         hydrogen_count <- NULL
         for (j in seq_len(num_atoms)) {
-            atomic_symbol[j, match(rcdk::get.symbol(atoms[[j]]), element_list)] <- 1
-            hydrogen_count <- c(hydrogen_count, rcdk::get.hydrogen.count(atoms[[j]]))
+            atomic_symbol[j, match(get.symbol(atoms[[j]]), element_list)] <- 1 # from rcdk::get.symbol
+            hydrogen_count <- c(hydrogen_count, get.hydrogen.count(atoms[[j]])) # from rcdk::get.hydrogen.count
         }
         X[[i]] <- cbind(atomic_symbol, hydrogen_count, degree)
     }
