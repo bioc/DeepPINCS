@@ -28,25 +28,17 @@ metric_f1_score <- function(y_true, y_pred) {
 
 
 get_canonical_smiles <- function(smiles) {
-    if (!require(rcdk)) {
-        install.packages("https://cran.r-project.org/src/contrib/Archive/rcdk/rcdk_3.8.0.tar.gz",
-                         repos = NULL, type = "source")
-    }
-    m <- parse.smiles(smiles) # from rcdk::parse.smiles
+    m <- rcdk::parse.smiles(smiles)
     canonical_smiles <- lapply(m, function(x) 
-        get.smiles(x, flavor = smiles.flavors(c("Canonical")))) # from rcdk::get.smiles and rcdk::smiles.flavors
+        rcdk::get.smiles(x, flavor = rcdk::smiles.flavors(c("Canonical"))))
     as.vector(unlist(canonical_smiles))
 }
 
 
 
 get_fingerprint <- function(smiles, ...) {
-    if (!require(rcdk)) {
-        install.packages("https://cran.r-project.org/src/contrib/Archive/rcdk/rcdk_3.8.0.tar.gz",
-                         repos = NULL, type = "source")
-    }
-    m <- parse.smiles(smiles) # from rcdk::parse.smiles
-    fpm <- lapply(m, function(x) get.fingerprint(x, ...)) # from rcdk::get.fingerprint
+    m <- rcdk::parse.smiles(smiles)
+    fpm <- lapply(m, function(x) rcdk::get.fingerprint(x, ...))
     for (i in seq_len(length(fpm))) {
         if (i == 1) fp <- matrix(0, length(m), fpm[[i]]@nbit)
         fp[i, fpm[[i]]@bits] <- 1
@@ -62,27 +54,23 @@ get_graph_structure_node_feature <- function(
         "C", "N", "O", "S", "F", "Si", "P", "Cl",
         "Br", "Mg", "Na", "Ca", "Fe", "Al", "I",
         "B", "K", "Se", "Zn", "H", "Cu", "Mn")) {
-    if (!require(rcdk)) {
-        install.packages("https://cran.r-project.org/src/contrib/Archive/rcdk/rcdk_3.8.0.tar.gz",
-                         repos = NULL, type = "source")
-    }
     A <- list()
     X <- list()
-    m <- parse.smiles(smiles) # from rcdk::parse.smiles
+    m <- rcdk::parse.smiles(smiles)
     
     for (i in seq_len(length(m))) {
-        adj <- get.adjacency.matrix(m[[i]]) # from rcdk::get.adjacency.matrix
+        adj <- rcdk::get.adjacency.matrix(m[[i]])
         a <- adj + diag(1, dim(adj))
         degree <- rowSums(adj)
         A[[i]] <- diag((degree+1)^(-1/2)) %*% a %*% diag((degree+1)^(-1/2))
         
-        atoms <- get.atoms(m[[i]]) # from rcdk::get.atoms
+        atoms <- rcdk::get.atoms(m[[i]])
         num_atoms <- length(degree)
         atomic_symbol <- matrix(0, num_atoms, length(element_list))
         hydrogen_count <- NULL
         for (j in seq_len(num_atoms)) {
-            atomic_symbol[j, match(get.symbol(atoms[[j]]), element_list)] <- 1 # from rcdk::get.symbol
-            hydrogen_count <- c(hydrogen_count, get.hydrogen.count(atoms[[j]])) # from rcdk::get.hydrogen.count
+            atomic_symbol[j, match(rcdk::get.symbol(atoms[[j]]), element_list)] <- 1
+            hydrogen_count <- c(hydrogen_count, rcdk::get.hydrogen.count(atoms[[j]]))
         }
         X[[i]] <- cbind(atomic_symbol, hydrogen_count, degree)
     }
